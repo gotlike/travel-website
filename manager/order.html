@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<!-- 页面meta -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>订单管理</title>
+		<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+		<link rel="stylesheet" href="../plugins/bootstrap-5.1.0-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+		<link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<script src="../plugins/jquery/jquery-2.2.3.min.js"></script>
+		<script src="../plugins/bootstrap-5.1.0-dist/js/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+
+		<!-- 分页组件开始 -->
+		<script src="../plugins/angularjs/pagination.js"></script>
+		<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+		<!-- 分页组件结束 -->
+
+		<script type="text/javascript" src="../js/base.js"></script>
+		<script type="text/javascript" src="../js/service/orderService.js"></script>
+		<script type="text/javascript" src="../js/service/uploadService.js"></script>
+		<script type="text/javascript" src="../js/controller/orderController.js"></script>
+		
+
+		<script src="../plugins/bootstrap-5.1.0-dist/js/bootstrap.bundle.js"></script>
+
+	</head>
+
+	<body class="hold-transition skin-red sidebar-mini" ng-app="travel" ng-controller="customerOrderController"
+		data-ng-init="load()">
+<div style="width: 100%;height: 100px;">
+			
+		</div>
+		<!-- .box-body -->
+		<div class="box-header with-border">
+			<!-- <h3 class="box-title ">订单管理</h3> -->
+		</div>
+		<div class="box-body">
+			<!-- 数据表格 -->
+			<div class="table-box">
+
+
+				<!--工具栏-->
+				<div class="pull-left div-left">
+					<div class="form-group form-inline">
+						<div class="btn-group">
+
+						</div>
+					</div>
+				</div>
+
+
+				<div class="search-div">
+					<div class="div-left  input-margin">
+						<button class="btn btn-blue-primary" ng-click="findCustomerOrderSearch()">查询</button>
+						<button class="btn btn-secondary" ng-click="findCustomerOrderSearchReset()">清空</button>
+
+					</div>
+
+					<div class="div-left">
+						<td>
+							<div class="input-margin">
+						<td class="input-margin-td-left ">
+							顾客ID：
+						</td>
+						<td class="input-margin-td-right">
+
+
+
+							<input class="form-control" id="searchCustomerId" placeholder="顾客ID"
+								ng-model="searchEntity.order_id">
+
+						</td>
+					</div>
+					</td>
+					<td>
+						<div class="input-margin">
+					<td class="input-margin-td-left">
+						状态：
+					</td>
+					<td class="input-margin-td-right">
+
+						<input class="form-control" id="searchPaystatus" placeholder="状态" ng-model="searchEntity.paystatus">
+
+					</td>
+				</div>
+				</td>
+				<td>
+					<div class="input-margin">
+				<td class="input-margin-td-left">
+					类型：
+				</td>
+				<td class="input-margin-td-right">
+
+					<input class="form-control" id="searchType" placeholder="类型" ng-model="searchEntity.type">
+
+				</td>
+			</div>
+			</td>
+			
+		
+
+		</div>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!--工具栏/-->
+		<div class="table-div-radius table-div table-div-margin table-div-backgroud">
+
+			<div class="btn-div">
+
+
+				<button type="button" class="table-div-btn" title="新建" data-bs-toggle="modal"
+					data-bs-target="#insertModel" ng-click="insertCustomerOrderClick()"><i class="fa fa-file-o"></i> 新建</button>
+				<button type="button" class="table-div-btn" title="删除" data-bs-toggle="modal"
+					data-bs-target="#deletesModal"><i class="fa fa-trash-o"></i> 删除</button>
+
+				<button type="button" class="table-div-btn" title="刷新" ng-click="reloadCustomerOrder()"><i
+						class="fa fa-refresh"></i> 刷新</button>
+
+			</div>
+
+			<div class="table-div-body table-div-scroll">
+				<!--数据列表-->
+				<table id="dataList" class="div-table table-div-text  div-table-striped div-table-hover">
+					<thead>
+						<tr>
+							<th class="table-th text-padding">
+								<input class="input-checkbox" id="selall" type="checkbox" class="icheckbox_square-blue">
+							</th>
+							<th class="table-th text-padding">订单ID</th>
+							<th class="table-th text-padding">价格</th>
+							<th class="table-th text-padding">成年人</th>
+							<th class="table-th text-padding">小孩</th>
+							<th class="table-th text-padding">描述</th>
+							<th class="table-th text-padding">创建时间</th>
+							<th class="table-th text-padding">状态</th>
+							<th class="table-th text-padding">是否删除</th>
+							<th class="table-th text-padding">预定时间</th>
+							<th class="text-center table-th">操作</th>
+						</tr>
+					</thead>
+					<tbody class="">
+
+						<tr class="table-tip-center" ng-show="list | isEmptyFilter">
+							<td class="table-tip-td" colspan="10">{{'当前没有订单信息'}}</td>
+						</tr>
+						<tr ng-repeat="entity in list" class="{{!$odd?'table-td-stried':''}}">
+
+							<td class="min-table-td text-padding">
+								<input class="input-checkbox" type="checkbox"
+									ng-click="updateSelection($event, entity.order_id)" ng-if="entity.del_flag==0">
+								<input class="input-checkbox" type="checkbox" class="switch-disabled"
+									ng-if="entity.del_flag!=0" disabled="disabled">
+							</td>
+							<td class="min-table-td text-padding">{{entity.order_id}}</td>
+							<td class="min-table-td text-padding">{{entity.price}}</td>
+							<td class="min-table-td text-padding">{{entity.people}}</td>
+							<td class="min-table-td text-padding">{{entity.child}}</td>
+							
+							<<td class="min-table-td text-padding">{{entity.remark | remarkStr}}</td>
+							<td class="min-table-td text-padding">{{entity.create_time | date:'yyyy-MM-dd HH:mm:ss'}}
+							<td class="min-table-td text-padding">{{entity.paystatus}}</td>
+							<td class="min-table-td text-padding">
+
+								<label class="switch scale-transform" ng-if="entity.del_flag=='0'">
+								
+									<input type="checkbox" ng-checked="{{entity.del_flag=='0'?'false':'true'}}"
+										data-bs-toggle="modal" data-bs-target="#deleteModal"
+										ng-click="findUserById(entity.userId)" id="{{'delFlag_switch_'+entity.userId}}">
+								
+									<div class="slider round"></div>
+								
+								</label>
+								<label class="switch scale-transform" ng-if="entity.del_flag!='0'">
+								
+									<input type="checkbox" ng-checked="{{entity.del_flag=='0'?'false':'true'}}"
+										disabled="disabled">
+									<div class="slider round switch-disabled"></div>
+								</label>
+
+							</td>
+							<td class="min-table-td text-padding">{{entity.booking_time | date:'yyyy-MM-dd HH:mm:ss'}}
+
+							
+							
+							<td class="text-center min-table-td">
+								<div class="div-width">
+									<button type="button" class="btn bg-olive btn-xs text-nowrap" data-bs-toggle="modal"
+										data-bs-target="#editModal" ng-click="findCustomerOrderById(entity)"
+										ng-if="entity.del_flag=='0'">修改</button>
+									<button type="button" class="btn bg-olive btn-xs text-nowrap"
+										ng-if="entity.del_flag!='0'" disabled="disabled">修改</button>
+									<button type="button" class="btn bg-olive btn-xs text-nowrap" data-bs-toggle="modal"
+										data-bs-target="#deleteButtonModal" ng-click="findCustomerOrderById(entity)"
+										ng-show="entity.del_flag=='0'">删除</button>
+
+									<button type="button" class="btn bg-olive btn-xs text-nowrap" data-toggle="modal"
+										data-target="#deleteButtonModal" ng-click="findCustomerOrderById(entity)"
+										ng-show="entity.del_flag!='0'" disabled="disabled">删除</button>
+								</div>
+
+							</td>
+
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+
+
+			<div class="btn-div">
+				<p class="display-change text-white">总共{{(totalNumbers/row) | textCeil}} 页,
+					{{totalNumbers}} 条
+				</p>
+
+				<div class="display-change page-skiprow-div">
+					<div class="display-change page-input-label text-white">
+						每页
+						<div class="mb-3 display-change">
+
+							<div class="dropup">
+								<button class="table-div-btn dropdown-toggle" type="button" id="dropdownMenuButton"
+									data-bs-toggle="dropdown" aria-expanded="false">
+									{{row}}
+								</button>
+								<ul class="dropdown-menu table-ul-div" aria-labelledby="dropdownMenuButton">
+									<li><button type="button" class="dropdown-item {{row==5?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,5)">5</button></li>
+									<li><button type="button" class="dropdown-item {{row==10?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,10)">10</button></li>
+									<li><button type="button" class="dropdown-item {{row==20?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,20)">20</button></li>
+									<li><button type="button" class="dropdown-item {{row==30?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,30)">30</button></li>
+									<li><button type="button" class="dropdown-item {{row==40?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,40)">40</button></li>
+									<li><button type="button" class="dropdown-item {{row==50?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,50)">50</button></li>
+								</ul>
+							</div>
+
+						</div>
+						条
+					</div>
+
+				</div>
+				<div class="display-change">
+
+					<div class="display-change page-input-label text-white">
+						第&nbsp;
+						<div class="mb-3 display-change">
+							<input class="form-control display-change table-skip-btn table-div-btn" id="skipPage"
+								placeholder="页数" ng-model="skipPage">
+
+						</div>
+						&nbsp; 页
+					</div>
+					<button type="button" class="table-div-btn" ng-click="findCustomerOrderPage()"><i class="fa fa-file-o">跳转</i>
+					</button>
+				</div>
+
+
+
+
+
+			</div>
+
+			<hr style="height:1px;border:1px solid #ffffff;color: #ffffff;" />
+
+			<div class="btn-div">
+
+
+				<div class="display-change">
+
+
+					<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(1)">首页</a>
+
+						<button class="table-nav-btn page-disabled  nav-minwidth-sm" disabled="disabled"
+							ng-show="(page-1)<1?true:false">上一页</button>
+
+
+						<button class="table-nav-btn nav-minwidth-sm" ng-click="skipPageFn(page-1)"
+							ng-show="(page-1)<1?false:true">上一页</buttom>
+
+							<button class="table-nav-btn nav-minwidth-sm" ng-click="skipPageFn(page-2)"
+								ng-show="(page-2)<1?false:true" ng-bind="page-2"></button>
+							<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(page-1)"
+								ng-show="(page-1)<1?false:true" ng-bind="page-1"></button>
+
+							<button class="table-nav-btn-active  nav-minwidth-sm">{{page}}</button>
+
+
+							<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(page+1)"
+								ng-show="((((totalNumbers/row) | textCeil)-page)<1?false:true)"
+								ng-bind="page+1"></button>
+
+
+							<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(page+2)"
+								ng-show="((((totalNumbers/row) | textCeil)-page)<2?false:true)"
+								ng-bind="page+2"></button>
+
+
+
+							<button class="table-nav-btn page-disabled  nav-minwidth-sm" disabled="disabled"
+								ng-show="((totalNumbers/row)<=page?true:false)">
+								下一页</button>
+
+							<button class="table-nav-btn nav-minwidth-sm"
+								ng-show="((totalNumbers/row)<=page?false:true)"
+								ng-click="skipPageFn(page+1)">下一页</button>
+							</li>
+							<button class="table-nav-btn  nav-minwidth-sm"
+								ng-click="skipPageFn(((totalNumbers/row) | textCeil))">尾页</button>
+
+
+
+
+
+
+
+				</div>
+
+
+			</div>
+
+
+
+
+
+			<!-- <div class="nav-page-div nav-page-div-text">
+					
+					
+						<nav aria-label="Search results pages" class=" nav-margin div-left">
+					
+							<ul class="pagination  justify-content-left">
+					
+					
+					
+								<li class="page-item disabled  nav-minwidth-middle">
+									<a class="page-link table-div-btn" href="#" tabindex="-1" aria-disabled="true">总共
+										{{(totalNumbers/row) | textCeil}} 页</a>
+								</li>
+								<li class="page-item disabled  nav-minwidth-middle">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">总共 {{totalNumbers}}
+										条</a>
+								</li>
+								<li class="page-item disabled">
+									<div class="display-change page-skiprow-div">
+										<div class="display-change page-input-label text-secondary">
+											每页
+											<div class="mb-3 display-change">
+					
+												<select class="form-select form-select-lg mb-3 page-skiprow" id="skipRow"
+													aria-label=".form-select-lg example" ng-model="row"
+													ng-change="skipRowFn(1)">
+													<option value="5">5</option>
+													<option value="10">10</option>
+													<option value="20">20</option>
+													<option value="30">30</option>
+													<option value="40">40</option>
+													<option value="50">50</option>
+												</select>
+											</div>
+											条
+										</div>
+					
+									</div>
+								</li>
+							</ul>
+					
+					
+					
+						</nav>
+						<nav aria-label="Search results pages" class=" nav-margin">
+					
+							<ul class="pagination  justify-content-center">
+								<li class="page-item nav-minwidth-sm"><a class="page-link" href="#"
+										ng-click="skipPageFn(1)">首页</a>
+								</li>
+								<li class="page-item disabled page-disabled  nav-minwidth-sm"
+									ng-show="(page-1)<1?true:false">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
+								</li>
+								<li class="page-item  nav-minwidth-sm" ng-click="skipPageFn(page-1)"
+									ng-show="(page-1)<1?false:true">
+									<a class="page-link" href="#">上一页</a>
+								</li>
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page-2)"
+										ng-show="(page-2)<1?false:true" ng-bind="page-2"></a></li>
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page-1)"
+										ng-show="(page-1)<1?false:true" ng-bind="page-1"></a></li>
+					
+								<li class="page-item active" aria-current="page">
+									<a class="page-link" href="#">{{page}}</a>
+								</li>
+					
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page+1)"
+										ng-show="((((totalNumbers/row) | textCeil)-page)<1?false:true)"
+										ng-bind="page+1"></a>
+								</li>
+					
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page+2)"
+										ng-show="((((totalNumbers/row) | textCeil)-page)<2?false:true)"
+										ng-bind="page+2"></a>
+								</li>
+					
+					
+								<li class="page-item disabled page-disabled  nav-minwidth-sm"
+									ng-show="((totalNumbers/row)<=page?true:false)">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">下一页</a>
+								</li>
+								<li class="page-item  nav-minwidth-sm" ng-show="((totalNumbers/row)<=page?false:true)">
+									<a class="page-link" href="#" ng-click="skipPageFn(page+1)">下一页</a>
+								</li>
+								<li class="page-item  nav-minwidth-sm"><a class="page-link" href="#"
+										ng-click="skipPageFn(((totalNumbers/row) | textCeil))">尾页</a></li>
+					
+							</ul>
+					
+					
+					
+						</nav>
+						<nav aria-label="Search results pages" class=" nav-margin">
+					
+							<ul class="pagination  justify-content-center">
+					
+								<li class="page-item  nav-minwidth-sm">
+									<a class="page-link" href="#" ng-click="findCustomerOrderPage()">跳到</a>
+								</li>
+								<li class="page-item disabled">
+									<div class="display-change page-input-div">
+										<div class="display-change page-input-label text-secondary">
+					
+											<div class="mb-3 display-change">
+												<input class="form-control display-change page-input" id="skipPage"
+													placeholder="页数" ng-model="skipPage">
+					
+											</div>
+					
+										</div>
+					
+									</div>
+								</li>
+								<li class="page-item disabled  nav-minwidth-sm">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">页</a>
+								</li>
+					
+							</ul>
+					
+					
+					
+						</nav>
+					</div> -->
+
+
+		</div>
+
+
+
+
+
+		</div>
+		<!-- 数据表格 /-->
+		</div>
+		<!-- /.box-body -->
+
+		<div class="toast-div">
+
+
+			<div class="toast toast-position  div-radius " customerOrder="alert" aria-live="assertive" aria-atomic="true">
+				<div
+					class="toast-header  Larger shadow  {{success=='true'?' text-white btn-success':' text-white bg-danger'}}">
+
+					<strong class="me-auto">Travel旅游系统</strong>
+					<small>{{nowtime | date:'yyyy-MM-dd HH:mm:ss'}}</small>
+					<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+				<div class="toast-body">
+					<figure class="text-center">
+						<blockquote class="blockquote">
+							<p>{{msg}}</p>
+						</blockquote>
+
+					</figure>
+
+				</div>
+			</div>
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="changeStatusModal" data-bs-backdrop="static" data-bs-keyboard="false"
+				tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  btn-danger" ng-show="entity.status=='0'">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-header Larger shadow  btn-sucess" ng-show="entity.status!='0'">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							{{entity.status=='0'?'确定禁用此订单吗':'确定启用此订单吗？'}}
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="updateCustomerOrderStatus()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="changeSwitchCancel('#status_switch_')">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="deletesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+				aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  alert-danger">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							确定删除这些订单吗?
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="deleteCustomerOrderByIds()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+			<div class="modal fade" id="deleteButtonModal" data-bs-backdrop="static" data-bs-keyboard="false"
+				tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  alert-danger">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							确定删除该订单吗?
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="deleteCustomerOrderById()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modal -->
+			<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+				aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  alert-danger">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							确定删除该订单吗?
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="deleteCustomerOrderById()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="changeSwitchCancel('#del_flag_switch_')">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+				aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-xl">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow">
+							<h3 class="modal-title" id="staticBackdropLabel">订单编辑</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<table
+								class="table table-striped table-bordered-simple table-hover border-bottom table-center"
+								width="1200px">
+
+								<tr>
+									<td>订单ID</td>
+									<td>
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editOrderId" placeholder="订单ID"
+												ng-model="entity.order_id">
+											<label for="editOrderId">Order ID</label>
+										</div>
+
+									</td>
+								</tr>
+								
+								<tr>
+									<td>价格</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editPrice" placeholder="价格" ng-model="entity.price">
+											<label for="editPrice">Price</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>成年人</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editPeople" placeholder="成年人" ng-model="entity.people">
+											<label for="editPeople">People</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>小孩</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editChild" placeholder="小孩" ng-model="entity.child">
+											<label for="editChild">Child</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>描述</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editRemark" placeholder="描述" ng-model="entity.remark">
+											<label for="editRemark">Remark</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>创建时间</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editCreateTime" placeholder="创建时间" ng-model="entity.create_time">
+											<label for="editCreateTime">Create Time</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>状态</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editpaystatus" placeholder="状态" ng-model="entity.paystatus">
+											<label for="editpaystatus">Pay Status</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>是否删除</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editDelFlag" placeholder="是否删除" ng-model="entity.del_flag">
+											<label for="editDelFlag">Delete Status</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>预订时间</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editBookingTime" placeholder="预订时间" ng-model="entity.booking_time">
+											<label for="editBookingTime">Booking Time</label>
+										</div>
+
+									</td>
+								</tr>
+						
+					</table>
+
+				</div>
+				<div class="modal-footer">
+
+					<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true" ng-click="updateCustomerOrder()">保存</button>
+					<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">关闭</button>
+				</div>
+			</div>
+			
+			
+		</div>
+		</div>
+
+		
+		<!-- Modal -->
+		<div class="modal fade" id="insertModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="addstaticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-xl">
+				<div class="modal-content div-radius">
+					<div class="modal-header Larger shadow">
+						<h3 class="modal-title" id="addstaticBackdropLabel">添加订单</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table
+							class="table table-striped table-bordered-simple table-hover border-bottom table-center"
+							width="1200px">
+								<tr>
+									<td>顾客ID</td>
+									<td>
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editCustomerId" placeholder="顾客ID"
+												ng-model="entity.customer_id">
+											<label for="editCustomerId">Customer ID</label>
+										</div>
+								
+									</td>
+								</tr>
+								<tr>
+									<td>订单ID</td>
+									<td>
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editOrderId" placeholder="订单ID"
+												ng-model="entity.order_id">
+											<label for="editOrderId">Order ID</label>
+										</div>
+
+									</td>
+								</tr>
+								
+								<tr>
+									<td>价格</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editPrice" placeholder="价格" ng-model="entity.price">
+											<label for="editPrice">Price</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>成年人</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editPeople" placeholder="成年人" ng-model="entity.people">
+											<label for="editPeople">People</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>小孩</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editChild" placeholder="小孩" ng-model="entity.child">
+											<label for="editChild">Child</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>描述</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editRemark" placeholder="描述" ng-model="entity.remark">
+											<label for="editRemark">Remark</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>创建时间</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editCreateTime" placeholder="创建时间" ng-model="entity.create_time">
+											<label for="editCreateTime">Create Time</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>状态</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editpaystatus" placeholder="状态" ng-model="entity.paystatus">
+											<label for="editpaystatus">Pay Status</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>是否删除</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editDelFlag" placeholder="是否删除" ng-model="entity.del_flag">
+											<label for="editDelFlag">Delete Status</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>预订时间</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editBookingTime" placeholder="预订时间" ng-model="entity.booking_time">
+											<label for="editBookingTime">Booking Time</label>
+										</div>
+
+									</td>
+								</tr>
+							
+		
+		
+				</table>
+		
+			</div>
+			<div class="modal-footer">
+		
+				<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+					ng-click="insertCustomerOrder()">保存</button>
+				<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+		
+		</div>
+		</div>
+		<div style="width: 100%;height: 200px;">
+			
+		</div>
+	</body>
+	<script>
+
+	</script>
+</html>

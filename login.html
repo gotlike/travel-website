@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录界面</title>
+	
+	
+	
+   <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+
+	<link rel="stylesheet" href="./plugins/bootstrap-5.1.0-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/index.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	
+	
+	<script src="./plugins/bootstrap-5.1.0-dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./plugins/angularjs/angular.min.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="./js/service/loginService.js"></script>
+	<script type="text/javascript" src="./js/controller/loginController.js"></script>
+</head>
+<body  ng-app="travel" ng-controller="loginController" data-ng-init="load()">
+<script>
+
+    $(document).ready(function () {
+        var whei = $(window).width()
+        $(".content-left").css({ fontSize: whei / 24 });
+        $(window).resize(function () {
+            var whei = $(window).width();
+            $(".content-left").css({ fontSize: whei / 24 });
+        });
+    });
+</script>
+<div class="main" >
+
+    <div class="header">
+        <div class="header-center fl">
+            <div class="header-title">
+                登录界面
+            </div>
+            <div class="header-img"></div>
+        </div>
+        <div class="header-bottom fl"></div>
+
+    </div>
+
+    <div class="content">
+        <div class="content-left">
+            <!-- <img src="images/d.png" alt=""> -->
+        </div>
+        <div class="content-right">
+			<div class="content-right-title">
+				<p class="content-right-title-h">用户登录</p>
+				<hr />
+			</div>
+            <div class="right-infp">
+				
+                <div class="right-infp-name">
+
+                    <input type="text" id="username" placeholder="请输入用户名" required="" value="" autocomplete="off"  ng-model="loginUser.userName">
+                </div>
+                <div class="right-infp-name">
+                    <input type="password" id="password" placeholder="请输入密码" autocomplete="off" ng-model="loginUser.password">
+                </div>
+
+                <div class="right-infp-btn">
+                    <button class="btn"  ng-click="fn_submit()" target="_blank">登&nbsp;&nbsp;录</button>
+					
+                </div>
+				
+            </div>
+        </div>
+    </div>
+<!-- Modal -->
+		<div class="modal fade" id="insertModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="addstaticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-xl">
+				<div class="modal-content div-radius">
+					<div class="modal-header Larger shadow">
+						<h3 class="modal-title" id="addstaticBackdropLabel">添加顾客</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table
+							class="table table-striped table-bordered-simple table-hover border-bottom table-center"
+							width="1200px">
+		
+							<tr>
+								<td>名称</td>
+								<td>
+		
+		
+									<div class="form-floating mb-3">
+										<input class="form-control" id="addUserName" placeholder="名称"
+											ng-model="entity.user_name">
+										<label for="addUserName">User Name</label>
+									</div>
+		
+								</td>
+							</tr>
+							<tr>
+								<td>昵称</td>
+								<td>
+		
+		
+									<div class="form-floating mb-3">
+										<input class="form-control" id="addNickName" placeholder="昵称"
+											ng-model="entity.nickName">
+										<label for="addNickName">Nick Name</label>
+									</div>
+		
+								</td>
+							</tr>
+							<tr>
+								<td>头像</td>
+								<td>
+		
+		
+		
+									<div>
+		
+		
+		
+										<label for="formFileLg"
+											class="form-label alert-success input-label">点击上传文件</label>
+										<input class="form-control form-control-lg" id="addfile" type="file"
+											ng-model="uploadfileinput" ng-change="uploadFile('addfile')">
+										<div class=" filtr-container ">
+											<div class=" filtr-item">
+										<img src="{{entity.avatar}}" class="img-thumbnail img-fluid" alt="上传头像">
+									</div>
+					</div>
+		
+		
+		
+		
+		
+		
+				</div>
+		
+		
+				</td>
+				</tr>
+				<tr>
+					<td>邮箱</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addEmail" type="email" placeholder="邮箱"
+								ng-model="entity.email">
+							<label for="addEmail">Email</label>
+						</div>
+		
+					</td>
+				</tr>
+				<tr>
+					<td>电话</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addPhoneNumber" placeholder="电话"
+								ng-model="entity.phonenumber">
+							<label for=addPhoneNumber">Phone Number</label>
+						</div>
+		
+					</td>
+				</tr>
+				<tr>
+					<td>性别</td>
+					<td>
+		
+						<select class="form-select form-select-lg mb-3" id="addSex"
+							aria-label=".form-select-lg example" ng-model="entity.sex">
+							<option value="0">男</option>
+							<option value="1">女</option>
+							<option value="2">其他</option>
+						</select>
+		
+		
+		
+		
+					</td>
+		
+				</tr>
+				<tr>
+					<td>密码</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addPassword" type="password" placeholder="密码"
+								ng-model="entity.password">
+							<label for="addPassword">Password</label>
+						</div>
+		
+					</td>
+				</tr>
+				<tr>
+					<td>描述</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addRemark" placeholder="描述" ng-model="entity.remark">
+							<label for="addRemark">Remark</label>
+						</div>
+		
+					</td>
+				</tr>
+		
+		
+				</table>
+		
+			</div>
+			<div class="modal-footer">
+		
+				<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+					ng-click="register()">保存</button>
+				<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+</div>
+
+
+</body>
+<script type="text/javascript" src="plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="plugins/sui/sui.min.js"></script>
+<script type="text/javascript" src="plugins/jquery-placeholder/jquery.placeholder.min.js"></script>
+<script src="js/pages/jquery.slideunlock.js"></script>
+<script src="js/login.js">
+</html>

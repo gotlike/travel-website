@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<!-- 页面meta -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>用户管理</title>
+		<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+		<link rel="stylesheet" href="../plugins/bootstrap-5.1.0-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+		<link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+		<link rel="stylesheet" href="../css/style.css">
+		<script src="../plugins/jquery/jquery-2.2.3.min.js"></script>
+		<script src="../plugins/bootstrap-5.1.0-dist/js/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+
+		<!-- 分页组件开始 -->
+		<script src="../plugins/angularjs/pagination.js"></script>
+		<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+		<!-- 分页组件结束 -->
+
+		<script type="text/javascript" src="../js/base.js"></script>
+		<script type="text/javascript" src="../js/service/managerService.js"></script>
+		<script type="text/javascript" src="../js/service/uploadService.js"></script>
+		<script type="text/javascript" src="../js/controller/managerController.js"></script>
+		<script type="text/javascript" src="../js/pages/manager.js"></script>
+
+		<script src="../plugins/bootstrap-5.1.0-dist/js/bootstrap.bundle.js"></script>
+
+	</head>
+
+	<body class="hold-transition skin-red sidebar-mini" ng-app="travel" ng-controller="managerController"
+		data-ng-init="load()">
+		<div style="width: 100%;height: 100px;">
+			
+		</div>
+		<!-- .box-body -->
+		<div class="box-header with-border">
+			<!-- <h3 class="box-title ">用户管理</h3> -->
+		</div>
+		<div class="box-body">
+			<!-- 数据表格 -->
+			<div class="table-box">
+
+
+				<!--工具栏-->
+				<div class="pull-left div-left">
+					<div class="form-group form-inline">
+						<div class="btn-group">
+
+						</div>
+					</div>
+				</div>
+
+
+				<div class="search-div">
+					<div class="div-left  input-margin">
+						<button class="btn btn-blue-primary" ng-click="findUserSearch()">查询</button>
+						<button class="btn btn-secondary" ng-click="findUserSearchReset()">清空</button>
+
+					</div>
+
+					<div class="div-left">
+						<td>
+							<div class="input-margin">
+						<td class="input-margin-td-left ">
+							ID：
+						</td>
+						<td class="input-margin-td-right">
+
+
+
+							<input class="form-control" id="searchUserId" placeholder="ID"
+								ng-model="searchEntity.userId">
+
+						</td>
+					</div>
+					</td>
+					<td>
+						<div class="input-margin">
+					<td class="input-margin-td-left">
+						名称：
+					</td>
+					<td class="input-margin-td-right">
+
+						<input class="form-control" id="searchName" placeholder="名称" ng-model="searchEntity.userName">
+
+					</td>
+				</div>
+				</td>
+				<td>
+					<div class="input-margin">
+				<td class="input-margin-td-left">
+					类型：
+				</td>
+				<td class="input-margin-td-right">
+
+					<input class="form-control" id="searchUserType" placeholder="类型" ng-model="searchEntity.userType">
+
+				</td>
+			</div>
+			</td>
+			<td>
+				<div class="input-margin">
+			<td class="input-margin-td-left">
+				邮箱：
+			</td>
+			<td class="input-margin-td-right">
+
+				<input class="form-control" id="searchEmail" placeholder="邮箱" ng-model="searchEntity.emai">
+
+			</td>
+		</div>
+		</td>
+		<td>
+			<div class="input-margin">
+		<td class="input-margin-td-left">
+			电话：
+		</td>
+		<td class="input-margin-td-right">
+
+			<input class="form-control" id="searchPhonenumber" placeholder="电话" ng-model="searchEntity.phonenumber">
+
+		</td>
+		</div>
+		</td>
+
+		</div>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!--工具栏/-->
+		<div class="table-div-radius table-div table-div-margin table-div-backgroud">
+
+			<div class="btn-div">
+
+
+				<button type="button" class="table-div-btn" title="新建" data-bs-toggle="modal"
+					data-bs-target="#insertModel" ng-click="insertUserClick()"><i class="fa fa-file-o"></i> 新建</button>
+				<button type="button" class="table-div-btn" title="删除" data-bs-toggle="modal"
+					data-bs-target="#deletesModal"><i class="fa fa-trash-o"></i> 删除</button>
+
+				<button type="button" class="table-div-btn" title="刷新" ng-click="reloadUser()"><i
+						class="fa fa-refresh"></i> 刷新</button>
+
+			</div>
+
+			<div class="table-div-body table-div-scroll">
+				<!--数据列表-->
+				<table id="dataList" class="div-table table-div-text  div-table-striped div-table-hover">
+					<thead>
+						<tr>
+							<th class="table-th text-padding">
+								<input class="input-checkbox" id="selall" type="checkbox" class="icheckbox_square-blue">
+							</th>
+							<th class="table-th text-padding">用户ID</th>
+							<th class="table-th text-padding">名称</th>
+							<th class="table-th text-padding">昵称</th>
+							<th class="table-th text-padding">类型</th>
+							<th class="table-th text-padding">邮箱</th>
+							<th class="table-th text-padding">电话</th>
+							<th class="table-th text-padding">性别</th>
+							<th class="table-th text-padding">状态</th>
+							<th class="table-th text-padding">已删除</th>
+							<th class="table-th text-padding">登录地址</th>
+							<th class="table-th text-padding">登录日期</th>
+							<th class="table-th text-padding">创建用户</th>
+							<th class="table-th text-padding">创建时间</th>
+							<th class="table-th text-padding">更新用户</th>
+							<th class="table-th text-padding">更新时间</th>
+							<th class="table-th text-padding">描述</th>
+							<th class="text-center table-th">操作</th>
+						</tr>
+					</thead>
+					<tbody class="">
+
+						<tr class="table-tip-center" ng-show="list | isEmptyFilter">
+							<td class="table-tip-td" colspan="18">{{'当前没有用户信息'}}</td>
+						</tr>
+						<tr ng-repeat="entity in list" class="{{!$odd?'table-td-stried':''}}">
+
+							<td class="min-table-td text-padding">
+								<input class="input-checkbox" type="checkbox"
+									ng-click="updateSelection($event, entity.userId)" ng-if="entity.delFlag==0">
+								<input class="input-checkbox" type="checkbox" class="switch-disabled"
+									ng-if="entity.delFlag!=0" disabled="disabled">
+							</td>
+							<td class="min-table-td text-padding">{{entity.userId}}</td>
+							<td class="min-table-td text-padding">{{entity.userName}}</td>
+							<td class="min-table-td text-padding">{{entity.nickName}}</td>
+							<td class="min-table-td text-padding">{{entity.userType=='00'?'系统用户':'用户'}}</td>
+							<td class="min-table-td text-padding">{{entity.email}}</td>
+							<td class="min-table-td text-padding">{{entity.phonenumber}}</td>
+							<td class="min-table-td text-padding">{{entity.sex=='0'?'男':(entity.sex=='1'?'女':'其他')}}
+							</td>
+							<td class="min-table-td text-padding">
+
+								<label class="switch scale-transform" ng-if="entity.delFlag=='0'">
+									<input type="checkbox" ng-checked="{{entity.status | checkstatus}}"
+										data-bs-toggle="modal" data-bs-target="#changeStatusModal"
+										ng-click="findUserById(entity.userId)" id="{{'status_switch_'+entity.userId}}">
+									<div class="slider round"></div>
+								</label>
+
+								<label class="switch scale-transform" ng-if="entity.delFlag!='0'">
+									<input type="checkbox" ng-checked="{{entity.status | checkstatus}}"
+										id="{{'status_switch_'+entity.userId}}" disabled="disabled">
+									<div class="slider round switch-disabled"></div>
+								</label>
+
+							</td>
+							<td class="min-table-td text-padding">
+								<label class="switch scale-transform" ng-if="entity.delFlag=='0'">
+
+									<input type="checkbox" ng-checked="{{entity.delFlag=='0'?'false':'true'}}"
+										data-bs-toggle="modal" data-bs-target="#deleteModal"
+										ng-click="findUserById(entity.userId)" id="{{'delFlag_switch_'+entity.userId}}">
+
+									<div class="slider round"></div>
+
+								</label>
+								<label class="switch scale-transform" ng-if="entity.delFlag!='0'">
+
+									<input type="checkbox" ng-checked="{{entity.delFlag=='0'?'false':'true'}}"
+										disabled="disabled">
+									<div class="slider round switch-disabled"></div>
+								</label>
+
+							</td>
+							<td class="min-table-td text-padding">{{entity.loginIp}}</td>
+							<td class="min-table-td text-padding">{{entity.loginDate | date:'yyyy-MM-dd HH:mm:ss'}}
+							</td>
+							<td class="min-table-td text-padding">{{entity.createBy}}</td>
+							<td class="min-table-td text-padding">{{entity.createTime | date:'yyyy-MM-dd HH:mm:ss'}}
+							</td>
+							<td class="min-table-td text-padding">{{entity.updateBy}}</td>
+							<td class="min-table-td text-padding">{{entity.updateTime | date:'yyyy-MM-dd HH:mm:ss'}}
+							</td>
+							<td class="min-table-td text-padding">{{entity.remark | remarkStr}}</td>
+							<td class="text-center min-table-td">
+								<div class="div-width">
+									<button type="button" class="btn bg-olive btn-xs text-nowrap" data-bs-toggle="modal"
+										data-bs-target="#editModal" ng-click="findUserById(entity.userId)"
+										ng-if="entity.delFlag=='0'">修改</button>
+									<button type="button" class="btn bg-olive btn-xs text-nowrap"
+										ng-if="entity.delFlag!='0'" disabled="disabled">修改</button>
+									<button type="button" class="btn bg-olive btn-xs text-nowrap" data-bs-toggle="modal"
+										data-bs-target="#deleteButtonModal" ng-click="findUserById(entity.userId)"
+										ng-show="entity.delFlag=='0'">删除</button>
+
+									<button type="button" class="btn bg-olive btn-xs text-nowrap" data-toggle="modal"
+										data-target="#deleteButtonModal" ng-click="findUserById(entity.userId)"
+										ng-show="entity.delFlag!='0'" disabled="disabled">删除</button>
+								</div>
+
+							</td>
+
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+
+
+			<div class="btn-div">
+				<p class="display-change text-white">总共{{(totalNumbers/row) | textCeil}} 页,
+					{{totalNumbers}} 条
+				</p>
+
+				<div class="display-change page-skiprow-div">
+					<div class="display-change page-input-label text-white">
+						每页
+						<div class="mb-3 display-change">
+
+							<div class="dropup">
+								<button class="table-div-btn dropdown-toggle" type="button" id="dropdownMenuButton"
+									data-bs-toggle="dropdown" aria-expanded="false">
+									{{row}}
+								</button>
+								<ul class="dropdown-menu table-ul-div" aria-labelledby="dropdownMenuButton">
+									<li><button type="button" class="dropdown-item {{row==5?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,5)">5</button></li>
+									<li><button type="button" class="dropdown-item {{row==10?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,10)">10</button></li>
+									<li><button type="button" class="dropdown-item {{row==20?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,20)">20</button></li>
+									<li><button type="button" class="dropdown-item {{row==30?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,30)">30</button></li>
+									<li><button type="button" class="dropdown-item {{row==40?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,40)">40</button></li>
+									<li><button type="button" class="dropdown-item {{row==50?'table-ul-div-active':''}}"
+											ng-click="skipRowFn(1,50)">50</button></li>
+								</ul>
+							</div>
+
+						</div>
+						条
+					</div>
+
+				</div>
+				<div class="display-change">
+
+					<div class="display-change page-input-label text-white">
+						第&nbsp;
+						<div class="mb-3 display-change">
+							<input class="form-control display-change table-skip-btn table-div-btn" id="skipPage"
+								placeholder="页数" ng-model="skipPage">
+
+						</div>
+						&nbsp; 页
+					</div>
+					<button type="button" class="table-div-btn" ng-click="findUserPage()"><i class="fa fa-file-o">跳转</i>
+					</button>
+				</div>
+
+
+
+
+
+			</div>
+
+			<hr style="height:1px;border:1px solid #ffffff;color: #ffffff;" />
+
+			<div class="btn-div">
+
+
+				<div class="display-change">
+
+
+					<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(1)">首页</a>
+
+						<button class="table-nav-btn page-disabled  nav-minwidth-sm" disabled="disabled"
+							ng-show="(page-1)<1?true:false">上一页</button>
+
+
+						<button class="table-nav-btn nav-minwidth-sm" ng-click="skipPageFn(page-1)"
+							ng-show="(page-1)<1?false:true">上一页</buttom>
+
+							<button class="table-nav-btn nav-minwidth-sm" ng-click="skipPageFn(page-2)"
+								ng-show="(page-2)<1?false:true" ng-bind="page-2"></button>
+							<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(page-1)"
+								ng-show="(page-1)<1?false:true" ng-bind="page-1"></button>
+
+							<button class="table-nav-btn-active  nav-minwidth-sm">{{page}}</button>
+
+
+							<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(page+1)"
+								ng-show="((((totalNumbers/row) | textCeil)-page)<1?false:true)"
+								ng-bind="page+1"></button>
+
+
+							<button class="table-nav-btn  nav-minwidth-sm" ng-click="skipPageFn(page+2)"
+								ng-show="((((totalNumbers/row) | textCeil)-page)<2?false:true)"
+								ng-bind="page+2"></button>
+
+
+
+							<button class="table-nav-btn page-disabled  nav-minwidth-sm" disabled="disabled"
+								ng-show="((totalNumbers/row)<=page?true:false)">
+								下一页</button>
+
+							<button class="table-nav-btn nav-minwidth-sm"
+								ng-show="((totalNumbers/row)<=page?false:true)"
+								ng-click="skipPageFn(page+1)">下一页</button>
+							</li>
+							<button class="table-nav-btn  nav-minwidth-sm"
+								ng-click="skipPageFn(((totalNumbers/row) | textCeil))">尾页</button>
+
+
+
+
+
+
+
+				</div>
+
+
+			</div>
+
+
+
+
+
+			<!-- <div class="nav-page-div nav-page-div-text">
+					
+					
+						<nav aria-label="Search results pages" class=" nav-margin div-left">
+					
+							<ul class="pagination  justify-content-left">
+					
+					
+					
+								<li class="page-item disabled  nav-minwidth-middle">
+									<a class="page-link table-div-btn" href="#" tabindex="-1" aria-disabled="true">总共
+										{{(totalNumbers/row) | textCeil}} 页</a>
+								</li>
+								<li class="page-item disabled  nav-minwidth-middle">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">总共 {{totalNumbers}}
+										条</a>
+								</li>
+								<li class="page-item disabled">
+									<div class="display-change page-skiprow-div">
+										<div class="display-change page-input-label text-secondary">
+											每页
+											<div class="mb-3 display-change">
+					
+												<select class="form-select form-select-lg mb-3 page-skiprow" id="skipRow"
+													aria-label=".form-select-lg example" ng-model="row"
+													ng-change="skipRowFn(1)">
+													<option value="5">5</option>
+													<option value="10">10</option>
+													<option value="20">20</option>
+													<option value="30">30</option>
+													<option value="40">40</option>
+													<option value="50">50</option>
+												</select>
+											</div>
+											条
+										</div>
+					
+									</div>
+								</li>
+							</ul>
+					
+					
+					
+						</nav>
+						<nav aria-label="Search results pages" class=" nav-margin">
+					
+							<ul class="pagination  justify-content-center">
+								<li class="page-item nav-minwidth-sm"><a class="page-link" href="#"
+										ng-click="skipPageFn(1)">首页</a>
+								</li>
+								<li class="page-item disabled page-disabled  nav-minwidth-sm"
+									ng-show="(page-1)<1?true:false">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">上一页</a>
+								</li>
+								<li class="page-item  nav-minwidth-sm" ng-click="skipPageFn(page-1)"
+									ng-show="(page-1)<1?false:true">
+									<a class="page-link" href="#">上一页</a>
+								</li>
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page-2)"
+										ng-show="(page-2)<1?false:true" ng-bind="page-2"></a></li>
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page-1)"
+										ng-show="(page-1)<1?false:true" ng-bind="page-1"></a></li>
+					
+								<li class="page-item active" aria-current="page">
+									<a class="page-link" href="#">{{page}}</a>
+								</li>
+					
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page+1)"
+										ng-show="((((totalNumbers/row) | textCeil)-page)<1?false:true)"
+										ng-bind="page+1"></a>
+								</li>
+					
+								<li class="page-item"><a class="page-link" href="#" ng-click="skipPageFn(page+2)"
+										ng-show="((((totalNumbers/row) | textCeil)-page)<2?false:true)"
+										ng-bind="page+2"></a>
+								</li>
+					
+					
+								<li class="page-item disabled page-disabled  nav-minwidth-sm"
+									ng-show="((totalNumbers/row)<=page?true:false)">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">下一页</a>
+								</li>
+								<li class="page-item  nav-minwidth-sm" ng-show="((totalNumbers/row)<=page?false:true)">
+									<a class="page-link" href="#" ng-click="skipPageFn(page+1)">下一页</a>
+								</li>
+								<li class="page-item  nav-minwidth-sm"><a class="page-link" href="#"
+										ng-click="skipPageFn(((totalNumbers/row) | textCeil))">尾页</a></li>
+					
+							</ul>
+					
+					
+					
+						</nav>
+						<nav aria-label="Search results pages" class=" nav-margin">
+					
+							<ul class="pagination  justify-content-center">
+					
+								<li class="page-item  nav-minwidth-sm">
+									<a class="page-link" href="#" ng-click="findUserPage()">跳到</a>
+								</li>
+								<li class="page-item disabled">
+									<div class="display-change page-input-div">
+										<div class="display-change page-input-label text-secondary">
+					
+											<div class="mb-3 display-change">
+												<input class="form-control display-change page-input" id="skipPage"
+													placeholder="页数" ng-model="skipPage">
+					
+											</div>
+					
+										</div>
+					
+									</div>
+								</li>
+								<li class="page-item disabled  nav-minwidth-sm">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">页</a>
+								</li>
+					
+							</ul>
+					
+					
+					
+						</nav>
+					</div> -->
+
+
+		</div>
+
+
+
+
+
+		</div>
+		<!-- 数据表格 /-->
+		</div>
+		<!-- /.box-body -->
+
+		<div class="toast-div">
+
+
+			<div class="toast toast-position  div-radius " role="alert" aria-live="assertive" aria-atomic="true">
+				<div
+					class="toast-header  Larger shadow  {{success=='true'?' text-white btn-success':' text-white bg-danger'}}">
+
+					<strong class="me-auto">Travel旅游系统</strong>
+					<small>{{nowtime | date:'yyyy-MM-dd HH:mm:ss'}}</small>
+					<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+				<div class="toast-body">
+					<figure class="text-center">
+						<blockquote class="blockquote">
+							<p>{{msg}}</p>
+						</blockquote>
+
+					</figure>
+
+				</div>
+			</div>
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="changeStatusModal" data-bs-backdrop="static" data-bs-keyboard="false"
+				tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  btn-danger" ng-show="entity.status=='0'">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-header Larger shadow  btn-sucess" ng-show="entity.status!='0'">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							{{entity.status=='0'?'确定禁用此用户吗':'确定启用此用户吗？'}}
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="updateUserStatus()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="changeSwitchCancel('#status_switch_')">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="deletesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+				aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  alert-danger">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							确定删除这些用户吗?
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="deleteUserByIds()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+			<div class="modal fade" id="deleteButtonModal" data-bs-backdrop="static" data-bs-keyboard="false"
+				tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  alert-danger">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							确定删除该用户吗?
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="deleteUserById()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modal -->
+			<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+				aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-sm">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow  alert-danger">
+							<h3 class="modal-title">警告</h5>
+						</div>
+						<div class="modal-body">
+
+							确定删除该用户吗?
+
+						</div>
+						<div class="modal-footer">
+
+							<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="deleteUserById()">确定</button>
+							<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true"
+								ng-click="changeSwitchCancel('#delFlag_switch_')">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+				aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-xl">
+					<div class="modal-content div-radius">
+						<div class="modal-header Larger shadow">
+							<h3 class="modal-title" id="staticBackdropLabel">用户编辑</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<table
+								class="table table-striped table-bordered-simple table-hover border-bottom table-center"
+								width="1200px">
+
+								<tr>
+									<td>名称</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editUserName" placeholder="名称"
+												ng-model="entity.userName">
+											<label for="editUserName">User Name</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>昵称</td>
+									<td>
+
+
+										<div class="form-floating mb-3">
+											<input class="form-control" id="editNickName" placeholder="昵称"
+												ng-model="entity.nickName">
+											<label for="editNickName">Nick Name</label>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<td>头像</td>
+									<td>
+
+
+
+										<div>
+
+
+
+											<label for="formFileLg"
+												class="form-label alert-success input-label">点击上传文件</label>
+											<input class="form-control form-control-lg" id="file" type="file"
+												ng-model="uploadfileinput" ng-change="uploadFile('file')"">
+											<div class=" filtr-container ">
+												<div class=" filtr-item">
+											<img src="{{entity.avatar}}" class="img-thumbnail img-fluid" alt="上传头像">
+										</div>
+						</div>
+
+
+
+
+
+
+					</div>
+
+
+					</td>
+					</tr>
+					<tr>
+						<td>邮箱</td>
+						<td>
+
+
+							<div class="form-floating mb-3">
+								<input class="form-control" id="editEmail" type="email" placeholder="邮箱"
+									ng-model="entity.email">
+								<label for="editEmail">Email</label>
+							</div>
+
+						</td>
+					</tr>
+					<tr>
+						<td>电话</td>
+						<td>
+
+
+							<div class="form-floating mb-3">
+								<input class="form-control" id="editPhoneNumber" placeholder="电话"
+									ng-model="entity.phonenumber">
+								<label for="editPhoneNumber">Phone Number</label>
+							</div>
+
+						</td>
+					</tr>
+					<tr>
+						<td>性别</td>
+						<td>
+
+							<select class="form-select form-select-lg mb-3" id="editSex"
+								aria-label=".form-select-lg example" ng-model="entity.sex">
+								<option value="0" {{entity.sex=='0'?'selected':''}}>男</option>
+								<option value="1" {{entity.sex=='1'?'selected':''}}>女</option>
+								<option value="2" {{entity.sex=='2'?'selected':''}}>其他</option>
+							</select>
+
+
+
+
+						</td>
+
+					</tr>
+					<tr>
+						<td>密码</td>
+						<td>
+
+
+							<div class="form-floating mb-3">
+								<input class="form-control" id="editPassword" type="password" placeholder="密码"
+									ng-model="entity.password">
+								<label for="editPassword">Password</label>
+							</div>
+
+						</td>
+					</tr>
+					<tr>
+						<td>描述</td>
+						<td>
+
+
+							<div class="form-floating mb-3">
+								<input class="form-control" id="editRemark" placeholder="描述" ng-model="entity.remark">
+								<label for="editRemark">Remark</label>
+							</div>
+
+						</td>
+					</tr>
+
+
+					</table>
+
+				</div>
+				<div class="modal-footer">
+
+					<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+						ng-click="updateUser()">保存</button>
+					<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">关闭</button>
+				</div>
+			</div>
+			
+			
+		</div>
+		</div>
+
+		
+		<!-- Modal -->
+		<div class="modal fade" id="insertModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="addstaticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-xl">
+				<div class="modal-content div-radius">
+					<div class="modal-header Larger shadow">
+						<h3 class="modal-title" id="addstaticBackdropLabel">添加用户</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table
+							class="table table-striped table-bordered-simple table-hover border-bottom table-center"
+							width="1200px">
+		
+							<tr>
+								<td>名称</td>
+								<td>
+		
+		
+									<div class="form-floating mb-3">
+										<input class="form-control" id="addUserName" placeholder="名称"
+											ng-model="entity.userName">
+										<label for="addUserName">User Name</label>
+									</div>
+		
+								</td>
+							</tr>
+							<tr>
+								<td>昵称</td>
+								<td>
+		
+		
+									<div class="form-floating mb-3">
+										<input class="form-control" id="addNickName" placeholder="昵称"
+											ng-model="entity.nickName">
+										<label for="addNickName">Nick Name</label>
+									</div>
+		
+								</td>
+							</tr>
+							<tr>
+								<td>头像</td>
+								<td>
+		
+		
+		
+									<div>
+		
+		
+		
+										<label for="formFileLg"
+											class="form-label alert-success input-label">点击上传文件</label>
+										<input class="form-control form-control-lg" id="addfile" type="file"
+											ng-model="uploadfileinput" ng-change="uploadFile('addfile')">
+										<div class=" filtr-container ">
+											<div class=" filtr-item">
+										<img src="{{entity.avatar}}" class="img-thumbnail img-fluid" alt="上传头像">
+									</div>
+					</div>
+		
+		
+		
+		
+		
+		
+				</div>
+		
+		
+				</td>
+				</tr>
+				<tr>
+					<td>邮箱</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addEmail" type="email" placeholder="邮箱"
+								ng-model="entity.email">
+							<label for="addEmail">Email</label>
+						</div>
+		
+					</td>
+				</tr>
+				<tr>
+					<td>电话</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addPhoneNumber" placeholder="电话"
+								ng-model="entity.phonenumber">
+							<label for=addPhoneNumber">Phone Number</label>
+						</div>
+		
+					</td>
+				</tr>
+				<tr>
+					<td>性别</td>
+					<td>
+		
+						<select class="form-select form-select-lg mb-3" id="addSex"
+							aria-label=".form-select-lg example" ng-model="entity.sex">
+							<option value="0">男</option>
+							<option value="1">女</option>
+							<option value="2">其他</option>
+						</select>
+		
+		
+		
+		
+					</td>
+		
+				</tr>
+				<tr>
+					<td>密码</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addPassword" type="password" placeholder="密码"
+								ng-model="entity.password">
+							<label for="addPassword">Password</label>
+						</div>
+		
+					</td>
+				</tr>
+				<tr>
+					<td>描述</td>
+					<td>
+		
+		
+						<div class="form-floating mb-3">
+							<input class="form-control" id="addRemark" placeholder="描述" ng-model="entity.remark">
+							<label for="addRemark">Remark</label>
+						</div>
+		
+					</td>
+				</tr>
+		
+		
+				</table>
+		
+			</div>
+			<div class="modal-footer">
+		
+				<button class="btn btn-success" data-bs-dismiss="modal" aria-hidden="true"
+					ng-click="insertUser()">保存</button>
+				<button class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">关闭</button>
+			</div>
+		</div>
+		
+		</div>
+		</div>
+		
+	</body>
+	<script>
+
+	</script>
+</html>

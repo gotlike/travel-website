@@ -1,0 +1,193 @@
+*{
+	font-size: 20px;
+   /* -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box */}
+*,body{padding:0px;	margin:0px/*font-family: "微软雅黑";*/}
+body{
+    background: url("../images/水,天空,留白,夜晚,月亮,曙暮光,湖,想法,海滩,海景.jpg") no-repeat;
+    background-size: cover;
+    font-size: 1.25rem;
+    
+    position: relative;
+    width: 100%;
+    height: 100%;
+	overflow-x: hidden;
+}
+.main{
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/*头部*/
+.header{
+    width: 100%;
+    height: 3.5rem;
+	color: #ffffff;
+    /* background: red; */
+
+}
+
+.header .header-center{
+    width: 50%;
+    height: 3rem;
+    position: relative;
+    margin: 0 auto;
+}
+.header .header-center .header-title{
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.25rem;
+    text-shadow: 0 0 20px #00d8ff;
+    line-height: 2.2rem;
+}
+.header .header-img{
+    background: url("../images/head.gif") no-repeat center center;
+    background-size: 100%;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 1.5rem;
+}
+
+.content{
+    width: 100%;
+    height: 20rem;
+	
+    /*background: green;*/
+    margin: 3rem auto 0 50px;
+    /*border: 1px solid green;*/
+}
+.content .content-left{
+    width:18.6rem ;
+    height: 17.4rem;
+    /*border: 1px solid red;*/
+    background: url("../images/d (2).png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1.25rem 0;
+    box-sizing: border-box;
+    margin-right: 6%;
+    float: left;
+}
+@-webkit-keyframes rotation {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.content .content-left {
+    -webkit-transform: rotate(360deg);
+    animation: rotation 15s linear infinite;
+    -moz-animation: rotation 15s linear infinite;
+    -webkit-animation: rotation 15s linear infinite;
+    -o-animation: rotation 15s linear infinite;
+}
+
+.content .content-right{
+    width:16.2rem ;
+    height: 17.4rem;
+	color: #ffffff;
+	   /* background: url("../images/e.png") no-repeat; */
+	background-color: rgba(255, 255, 255, 0.3);
+	border-radius: 10px;
+    background-size: 100% 100%;
+    float: right;
+    position: relative;
+	right: 10%;
+}
+.right-infp{
+    width: 12rem;
+    height: 9rem;
+    margin: auto auto;
+	/* border: 1px solid red; */
+    top:4.8rem;
+    /* left: 2.7rem; */
+}
+.right-infp-name{
+    /* background: url("../images/b.png") no-repeat; */
+	background-color: rgba(255, 255, 255, 0.1);
+    width: 100%;
+    height: 1.5rem;
+    background-size: 100% 100%;
+    margin-bottom: 1.25rem;
+
+}
+
+.right-infp-name input{
+	width: 100%;
+	border-width: 1px !important;
+	border-color: transparent !important;
+	border-radius: 3px !important;
+	box-shadow: 0px 0px 0px transparent !important;
+    border: none;
+    box-sizing: border-box;
+    height: 1.5rem;
+    background: none !important;
+    color: #00eaff;
+    padding-left: 0.5rem;
+    outline: none;
+    -webkit-tap-highlight-color:rgba(255,0,0,0);
+
+}
+.right-infp-name input:focus{
+
+    box-shadow: 0px 0px 6px #ffffff !important;
+
+}
+
+.content input::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 1.0);
+}
+.right-infp-btn{
+    /* background: url("../images/a.png") no-repeat; */
+	/* background-color: rgba(1, 197, 218, 1.0); */
+    width: 100%;
+    height: 1.5rem;
+    margin-bottom: 1.25rem;
+	border-radius: 5px;
+}
+.right-infp-btn:hover{
+    /* background: url("../images/a.png") no-repeat; */
+	/* background-color: rgba(0, 240, 240, 1.0);
+	box-shadow: inset 1px 1px 50px rgba(0, 255, 255, 1.0); */
+
+
+}
+.right-infp-btn .btn{
+    width: 100%;
+    border: none;
+    /* box-sizing: border-box; */
+	background-color: rgba(0, 213, 232, 1.0);
+    height: 100%;
+    font-size: 20px;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+
+	line-height: 0rem;
+
+}
+.right-infp-btn .btn:hover{
+	background-color: rgba(0, 240, 240, 1.0);
+	box-shadow: inset 1px 1px 50px rgba(0, 255, 255, 1.0);
+
+
+}
+.content-right-title{
+	width: 12rem;
+	margin: auto auto 30px;
+
+}
+.content-right-title-h{
+	width: 100%;
+	margin: 20px auto;
+}
+.content-right-title hr{
+	height: 3px;
+	
+}

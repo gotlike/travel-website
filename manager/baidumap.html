@@ -1,0 +1,80 @@
+<!DOCTYPE html> 
+<html>
+<head> 
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>Hello, World</title> 
+<style type="text/css"> 
+html{height:100%} 
+body{height:100%;margin:0px;padding:0px} 
+#container{height:100%} 
+</style> 
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=b7UxXARNYrqv7mnGMuBz22TLUsyS9N9f">
+</script>
+</head> 
+  <button onclick="getCity(116.404, 39.915)">click</button>
+<body> 
+<div id="container"></div>
+<script type="text/javascript">
+var map = new BMapGL.Map("container");
+// 创建地图实例 
+var point = new BMapGL.Point(116.404, 39.915);
+// 创建点坐标 
+map.centerAndZoom(point, 15);
+// 初始化地图，设置中心点坐标和地图级别 
+
+map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+
+var scaleCtrl = new BMapGL.ScaleControl();  // 添加比例尺控件
+map.addControl(scaleCtrl);
+var zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
+map.addControl(zoomCtrl);
+var cityCtrl = new BMapGL.CityListControl();  // 添加城市列表控件
+map.addControl(cityCtrl);
+map.setMapStyleV2({     
+  styleId: '1405b03e9a509f411f7fcffb5f809450'
+});
+
+
+
+var geolocation = new BMap.Geolocation();
+geolocation.getCurrentPosition(function(r){
+ if(this.getStatus() == BMAP_STATUS_SUCCESS){
+  var mk = new BMap.Marker(r.point);
+  map.addOverlay(mk);
+  map.panTo(r.point);
+  alert('您的位置：'+r.point.lng+','+r.point.lat);
+ }
+ else {
+  alert('failed'+this.getStatus());
+ }        
+});
+
+getCity: function (latitude, longitude)
+  {
+    var that=this
+    var url= "https://api.map.baidu.com/reverse_geocoding/v3/";
+    var struct={
+      location: latitude+ "," +longitude,
+      ak: "amH0AbevGXZMHeGGIWgEPeVcmiVhGz9k",
+        output:"json"
+    }
+    wx.request({
+      url: url,
+      data: struct,
+      success: function(res) {
+        console.log(JSON.stringify(res));
+        var city = res.data.result.addressComponent.city;//获取城市信息
+        that.setData({
+          city:city,
+        })
+        //获取天气
+        that.getWeather(city);
+      },
+      fail: function(res) {},
+      complete: function(res) {},
+    })
+  },
+</script> 
+</body> 
+</html>
